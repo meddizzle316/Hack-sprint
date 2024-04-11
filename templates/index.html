@@ -5,9 +5,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
-    <script src="{{ url_for('static', filename='index.js')}}"></script>
 
+    <!-- installing tailwind for css classes -->
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+
+    <!-- installing handsfree for blink_detect.js -->
+    <link rel="stylesheet" href="https://unpkg.com/handsfree@8.5.1/build/lib/assets/handsfree.css" />
+    <script src="https://unpkg.com/handsfree@8.5.1/build/lib/handsfree.js"></script>
+    
+    <!-- referencing index.js and blink_detect.js -->
+    <script src="{{ url_for('static', filename='index.js')}}"></script>
+    <!-- TODO uncomment out below line when ready to implement blink_detect script -->
+    <!-- <script src="{{ url_for('static', filename='blink_detect.js')}}"></script> -->
+
+   
+    <!-- installing webgazer.js script -->
+    <script src="{{ url_for('static'), filename='webgazer.js'}}"></script>
+    <!-- installing script to initialize webgazer object -->
+    <script src="{{ url_for('static'), filename='eye_tracking.js'}}"></script>
     <style>
        body {
             margin: 0;
@@ -16,6 +31,12 @@
     </style>
 </head>
 <body>
+    <!-- #TODO uncomment out the following script when ready to implement handsfree script -->
+    <!-- <script>
+        const handsfree = new Handsfree({hands: true})
+        handsfree.enablePlugins('browser')
+        handsfree.start()
+      </script> -->
     <div class="fixed inset-0 flex items-center justify-center" id="modalEl">
         <div class="bg-white max-w-md w-full p-6 text-center">
             <h1 class="text-4xl font-bold leading-none">0</h1>

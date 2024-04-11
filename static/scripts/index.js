@@ -68,9 +68,20 @@ function animate() {
     c.fillStyle = 'rgba(0, 0, 0, 0.1';
     c.fillRect(x, y, canvas.width, canvas.height)
 
-    // every frame, draws player using draw function
+    // every frame, update draws player using draw function and updates position based on velocity and speed
+    player.update();
 
-    player.update()
+    // setting horizontal velocity based on key input
+    player.velocity.x = 0;
+    if (keys.d.pressed) player.velocity.x = 5;
+    else if (keys.a.pressed) player.velocity.x = -5;
+
+    // setting vertical velocity based on key input
+    player.velocity.y = 0;
+    if (keys.s.pressed) player.velocity.y = 5;
+    else if (keys.w.pressed) player.velocity.y = -5; 
+    
+
     // TODO: condition for ending game, likely a timer or the "death" of the world
     // ending the game
     let placeHolder = 1; // just a placeholder to make sure we don't end yet
@@ -81,21 +92,54 @@ function animate() {
         
 }
 
+const keys = {
+    d: {
+        pressed: false,
+    },
+    a: {
+        pressed: false,
+    },
+    w: {
+        pressed: false,
+    },
+    s: {
+        pressed: false,
+    }
+}
+
 window.addEventListener('keydown', (event) => {
     switch(event.key) {
         case 'd':
-           player.velocity.x = 1;
+           keys.d.pressed = true;
         break
         case 'a':
-            player.velocity.x = -1;
+            keys.a.pressed = true;;
         break
 
         case 's':
-            player.velocity.y = 1;
+            keys.s.pressed = true;;
         break
 
         case 'w':
-            player.velocity.y = -1;
+            keys.w.pressed = true;;
+        break
+    }
+})
+window.addEventListener('keyup', (event) => {
+    switch(event.key) {
+        case 'd':
+           keys.d.pressed = false;
+        break
+        case 'a':
+            keys.a.pressed = false;
+        break
+
+        case 's':
+            keys.s.pressed = false;
+        break
+
+        case 'w':
+            keys.w.pressed = false;
         break
     }
 })

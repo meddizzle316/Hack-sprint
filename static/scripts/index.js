@@ -48,9 +48,9 @@ class Player {
 
         // condition if object reaches bottom of screen, will this even happen? 
         // DOES not cover sides or top border collisions yet
-        if (this.position.y + (this.radius * 2) + this.velocity.y > canvas.height) {
-            this.velocity.y = 0;
-        }
+        // if (this.position.y + (this.radius * 2) + this.velocity.y > canvas.height) {
+        //     this.velocity.y = 0;
+        // }
 
     }
 }
@@ -112,20 +112,21 @@ const keys = {
 }
 
 window.addEventListener('keydown', (event) => {
+
     switch(event.key) {
         case 'd':
            keys.d.pressed = true;
         break
         case 'a':
-            keys.a.pressed = true;;
+            keys.a.pressed = true;
         break
 
         case 's':
-            keys.s.pressed = true;;
+            keys.s.pressed = true;
         break
 
         case 'w':
-            keys.w.pressed = true;;
+            keys.w.pressed = true;
         break
     }
 })
@@ -145,6 +146,25 @@ window.addEventListener('keyup', (event) => {
         case 'w':
             keys.w.pressed = false;
         break
+    }
+    const playerSides = {
+        left: this.position.x - this.radius,
+        right: this.position.x + this.radius,
+        top: this.position.y - this.radius,
+        bottom: this.position.y + this.radius,
+    }
+
+    if (playerSides.left < 0) {
+        this.position.x = this.radius;
+    }
+    if (playerSides.right > canvas.width){
+        this.position.x = canvas.width - this.radius;
+    }
+    if (playerSides.top < 0) {
+        this.position.y = this.radius;
+    }
+    if (playerSides.bottom > canvas.height) {
+        this.position.y = canvas.height - this.radius;
     }
 })
 

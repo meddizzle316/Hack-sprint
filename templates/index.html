@@ -13,16 +13,7 @@
     <link rel="stylesheet" href="https://unpkg.com/handsfree@8.5.1/build/lib/assets/handsfree.css" />
     <script defer src="https://unpkg.com/handsfree@8.5.1/build/lib/handsfree.js"></script>
     
-    <!-- referencing index.js and blink_detect.js -->
-    <script defer src="{{ url_for('static', filename='scripts/index.js') }}"></script>
-    <!-- TODO uncomment out below line when ready to implement blink_detect script -->
-    <!-- <script src="{{ url_for('static', filename='blink_detect.js')}}"></script> -->
-
-   
-    <!-- installing webgazer.js script -->
-    <script defer src="{{ url_for('static', filename='scripts/webgazer.js') }}"></script>
-    <!-- installing script to initialize webgazer object -->
-    <script defer src="{{ url_for('static', filename='scripts/eye_tracking.js') }}"></script>
+    
     <style>
        body {
             margin: 0;
@@ -66,6 +57,19 @@
         
         </canvas>
     </div>
+    <canvas id="plotting_canvas"></canvas>
+    <!-- referencing index.js and blink_detect.js -->
+    <script defer src="{{ url_for('static', filename='scripts/index.js') }}"></script>
+    <!-- TODO uncomment out below line when ready to implement blink_detect script -->
+    <!-- <script src="{{ url_for('static', filename='blink_detect.js')}}"></script> -->
 
+   
+    <!-- installing webgazer.js script -->
+    <script defer src="{{ url_for('static', filename='scripts/webgazer.js') }}"></script>
+
+    <!-- installing script to initialize webgazer object -->
+    <!-- <script defer src="{{ url_for('static', filename='scripts/eye_tracking.js') }}"></script> -->
+    
+    <script defer src="{{ url_for('static', filename='scripts/main.js')}}"></script>
 </body>
 </html>

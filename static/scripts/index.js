@@ -1,4 +1,6 @@
 #!/usr/bin/node
+
+// import * as webgazer from './webgazer.just'
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
 
@@ -57,8 +59,6 @@ class Player {
     update() {
     //
         this.draw();
-        console.log(this.position.x);
-        console.log(this.position.y);
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
 

@@ -5,10 +5,67 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+
+    <!-- installing tailwind for css classes -->
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+
+    <!-- installing handsfree for blink_detect.js -->
+    <link rel="stylesheet" href="https://unpkg.com/handsfree@8.5.1/build/lib/assets/handsfree.css" />
+    <script defer src="https://unpkg.com/handsfree@8.5.1/build/lib/handsfree.js"></script>
+    
+    <!-- referencing index.js and blink_detect.js -->
+    <script defer src="{{ url_for('static', filename='scripts/index.js') }}"></script>
+    <!-- TODO uncomment out below line when ready to implement blink_detect script -->
+    <!-- <script src="{{ url_for('static', filename='blink_detect.js')}}"></script> -->
+
+   
+    <!-- installing webgazer.js script -->
+    <script defer src="{{ url_for('static', filename='scripts/webgazer.js') }}"></script>
+    <!-- installing script to initialize webgazer object -->
+    <script defer src="{{ url_for('static', filename='scripts/eye_tracking.js') }}"></script>
+    <style>
+       body {
+            margin: 0;
+            background: black;
+        }
+        .canvas-container {
+            position: relative;
+        }
+        #game-background {
+            position: absolute;
+            z-index: 999;
+        }
+        #modalEl {
+            position:relative;
+        }
+        #restartScreen {
+            position: absolute;
+            z-index: 1000;
+        }
+    </style>
 </head>
 <body>
-    <canvas>
+    <!-- #TODO uncomment out the following script when ready to implement handsfree script -->
+    <!-- <script>
+        const handsfree = new Handsfree({hands: true})
+        handsfree.enablePlugins('browser')
+        handsfree.start()
+      </script> -->
+    <div class="fixed inset-0 flex items-center justify-center" id="modalEl">
+        <div class="bg-white max-w-md w-full p-6 text-center" id="restartScreen">
+            <h1 class="text-4xl font-bold leading-none">0</h1>
+            <p class="text-sm text-gray-700 mb-4">Points</p>
+            <div>
+                <button class="bg-blue-500 text-white w-full py-3 rounded-full text-sm" id="startGameBtn">Start Game</button>
+            </div>
+            
+        </div>
+    </div>
+    <div class="canvas-container">
+        <canvas id="game-background">
         
-    </canvas>
+        </canvas>
+    </div>
+
 </body>
 </html>

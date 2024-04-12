@@ -1,0 +1,188 @@
+#!/usr/bin/node
+const canvas = document.querySelector('canvas');
+const c = canvas.getContext('2d');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const startGameBtn = document.querySelector('#startGameBtn')
+const modalEl = document.querySelector('#modalEl')
+
+const middleX = canvas.width / 2;
+const middleY = canvas.height / 2;
+
+class Player {
+    constructor (radius, color, speed) {
+        
+        // the 'coordinates' of the circle
+        this.position = {
+            x: middleX,
+            y: middleY
+        };
+
+        // the color
+        this.color = color;
+        
+        // if r*2, gives us both height and width of object from this.position location 
+        this.radius = radius;
+
+        // overall speed of object, a multiplier to velocity which moves the object
+        this.speed = speed;
+
+        // used to move the object, changing x moves horizontally, y vertically
+        this.velocity = {
+            x: 0,
+            y: 0,
+        }
+    }
+
+    draw() {
+        c.save()
+        c.shadowColor = this.color;
+        c.shadowBlur = 20;
+        c.beginPath();
+        c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2, false);
+        c.fillStyle = this.color;
+        
+        c.fill();
+        c.restore();
+    }
+
+    // update() {
+    //     this.draw();
+    //     this.postion.x += (this.velocity.x * this.speed);
+    //     this.postion.y += (this.velocity.y * this.speed);
+
+
+    //     // condition if object reaches bottom of screen, will this even happen? 
+    //     // DOES not cover sides or top border collisions yet
+    //     // if (this.position.y + (this.radius * 2) + this.velocity.y > canvas.height) {
+    //     //     this.velocity.y = 0;
+    //     // }
+
+    // }
+}
+
+
+let player = new Player(30, 'white', 1);
+// player.draw()
+
+function init() {
+    player = new Player(30, 'white', 1);
+}
+
+
+function animate() {
+    animationId = requestAnimationFrame(animate);
+    // every frame, fills canvas with black background
+    c.fillStyle = 'rgba(0, 0, 0, 0.1';
+    c.fillRect(0, 0, canvas.width, canvas.height)
+
+    // every frame, update draws player using draw function and updates position based on velocity and speed
+    player.draw();
+
+    // setting horizontal velocity based on key input
+    // player.position.x = 0;
+    if (keys.d.pressed) player.position.x += 5;
+    else if (keys.a.pressed) player.position.x -= 5;
+
+    // setting vertical velocity based on key input
+    // player.position.y = 0;
+    if (keys.s.pressed) player.position.y += 5;
+    else if (keys.w.pressed) player.position.y -= 5; 
+    
+
+    // TODO: condition for ending game, likely a timer or the "death" of the world
+    // ending the game
+    let placeHolder = 1; // just a placeholder to make sure we don't end yet
+    if (placeHolder == 0)    {
+        cancelAnimationFrame(animationId);
+        modalEl.style.display = 'flex';
+    }
+        
+}
+
+const keys = {
+    d: {
+        pressed: false,
+    },
+    a: {
+        pressed: false,
+    },
+    w: {
+        pressed: false,
+    },
+    s: {
+        pressed: false,
+    }
+}
+
+window.addEventListener('keydown', (event) => {
+
+    switch(event.key) {
+        case 'd':
+           keys.d.pressed = true;
+        break
+        case 'a':
+            keys.a.pressed = true;
+        break
+
+        case 's':
+            keys.s.pressed = true;
+        break
+
+        case 'w':
+            keys.w.pressed = true;
+        break
+    }
+    console.log(player)
+    const playerSides = {
+        left: player.position.x - player.radius,
+        right: player.position.x + player.radius,
+        top: player.position.y - player.radius,
+        bottom: player.position.y + player.radius,
+    }
+    console.log(playerSides);
+    console.log(canvas.height);
+    console.log(canvas.width);
+
+    if (playerSides.left < 0) {
+        player.position.x = player.radius;
+    }
+    if (playerSides.right > canvas.width){
+        player.position.x = canvas.width - player.radius;
+    }
+    if (playerSides.top < 0) {
+        player.position.y = player.radius;
+    }
+    if (playerSides.bottom > canvas.height) {
+        player.position.y = canvas.height - player.radius;
+    }
+})
+window.addEventListener('keyup', (event) => {
+    switch(event.key) {
+        case 'd':
+           keys.d.pressed = false;
+        break
+        case 'a':
+            keys.a.pressed = false;
+        break
+
+        case 's':
+            keys.s.pressed = false;
+        break
+
+        case 'w':
+            keys.w.pressed = false;
+        break
+    }
+
+})
+
+startGameBtn.addEventListener('click', () => {
+    init();
+    animate();
+    modalEl.style.display = 'none';
+})
+
+

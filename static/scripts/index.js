@@ -1,15 +1,38 @@
 #!/usr/bin/node
-const canvas = document.querySelector('canvas');
+
+// import * as webgazer from './webgazer.js'
+
+let xprediction;
+let yprediction
+
+webgazer.setGazeListener(function(data, elapsedTime) {
+	if (data == null) {
+		return;
+	}
+	xprediction = data.x;
+	// console.log(xprediction) //these x coordinates are relative to the viewport
+	yprediction = data.y;
+	// console.log(yprediction) //these y coordinates are relative to the viewport
+	// console.log(elapsedTime); //elapsed time is based on time since begin was called
+}).begin();
+
+const canvas = document.querySelector('#game-background');
 const c = canvas.getContext('2d');
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+webgazer
 const startGameBtn = document.querySelector('#startGameBtn')
 const modalEl = document.querySelector('#modalEl')
 
 const middleX = canvas.width / 2;
 const middleY = canvas.height / 2;
+
+function getRandomNum(min, max){
+    return Math.random() * (max - min) + min;
+}
+let count = 0;
 
 class Player {
     constructor (radius, color, speed) {
@@ -31,9 +54,11 @@ class Player {
 
         // used to move the object, changing x moves horizontally, y vertically
         this.velocity = {
-            x: 0,
-            y: 0,
+            x: getRandomNum(1, 10),
+            y: getRandomNum(1, 10),
         }
+
+        this.health = 3;
     }
 
     draw() {
@@ -48,27 +73,78 @@ class Player {
         c.restore();
     }
 
-    // update() {
-    //     this.draw();
-    //     this.postion.x += (this.velocity.x * this.speed);
-    //     this.postion.y += (this.velocity.y * this.speed);
+    update() {
+    //
+        this.draw();
+        this.position.x += this.velocity.x;
+        this.position.y += this.velocity.y;
+        console.log(count);
+       
 
+        // boundary handling ?? perhaps video will show something better
+        const playerSides = {
+            left: player.position.x - player.radius,
+            right: player.position.x + player.radius,
+            top: player.position.y - player.radius,
+            bottom: player.position.y + player.radius,
+        }
 
-    //     // condition if object reaches bottom of screen, will this even happen? 
-    //     // DOES not cover sides or top border collisions yet
-    //     // if (this.position.y + (this.radius * 2) + this.velocity.y > canvas.height) {
-    //     //     this.velocity.y = 0;
-    //     // }
+        if (playerSides.right >= canvas.width || playerSides.left <= 0) {
+            this.velocity.x = -this.velocity.x;
+        }
+        if (playerSides.bottom >= canvas.height || playerSides.top <= 0) {
+            this.velocity.y = -this.velocity.y;
+        }
 
-    // }
+        let xIsCenter = false;
+        let yIsCenter = false;
+
+        const colors = {
+            // white
+            3: "rgb(255, 255, 255)", 
+            // light gray
+            2: "rgb(128, 128, 128)",
+            // dark gray
+            1: "rgb(105,105,105)",
+            // black
+            0: "rgb(0, 0, 0)"
+        }
+
+        if (playerSides.right > xprediction && playerSides.left < xprediction) {
+            console.log("xprediction is between the player")
+            xIsCenter = true;
+        }
+        if (playerSides.bottom > yprediction && playerSides.top < yprediction) {
+            console.log("yprediction is between the player")
+            yIsCenter = true;
+        }
+        if (yIsCenter === false && xIsCenter === false) {
+            // this.color = "rgb(192, 192,192)";
+            console.log(count);
+            if (count <= 100) count++;
+            else {
+                count = 0;
+                console.log(this.health)
+                if (this.health > 0) this.health -= 1;
+                if (this.health === 0) {
+                    // end game and show restart div
+                    cancelAnimationFrame(animationId);
+                    modalEl.style.display = 'flex';
+                }
+                this.color = colors[this.health];
+                console.log(this.color);
+                // this.color = "rgb(112, 128, 144)";
+            } 
+            
+        }
+    }
+
 }
 
-
-let player = new Player(30, 'white', 1);
-// player.draw()
+let player = new Player(60, 'white', 1);
 
 function init() {
-    player = new Player(30, 'white', 1);
+    player = new Player(60, 'white', 1);
 }
 
 
@@ -79,19 +155,9 @@ function animate() {
     c.fillRect(0, 0, canvas.width, canvas.height)
 
     // every frame, update draws player using draw function and updates position based on velocity and speed
-    player.draw();
-
-    // setting horizontal velocity based on key input
-    // player.position.x = 0;
-    if (keys.d.pressed) player.position.x += 5;
-    else if (keys.a.pressed) player.position.x -= 5;
-
-    // setting vertical velocity based on key input
-    // player.position.y = 0;
-    if (keys.s.pressed) player.position.y += 5;
-    else if (keys.w.pressed) player.position.y -= 5; 
-    
-
+    player.update();
+    console.log(xprediction);
+    console.log(yprediction);
     // TODO: condition for ending game, likely a timer or the "death" of the world
     // ending the game
     let placeHolder = 1; // just a placeholder to make sure we don't end yet
@@ -102,87 +168,9 @@ function animate() {
         
 }
 
-const keys = {
-    d: {
-        pressed: false,
-    },
-    a: {
-        pressed: false,
-    },
-    w: {
-        pressed: false,
-    },
-    s: {
-        pressed: false,
-    }
-}
-
-window.addEventListener('keydown', (event) => {
-
-    switch(event.key) {
-        case 'd':
-           keys.d.pressed = true;
-        break
-        case 'a':
-            keys.a.pressed = true;
-        break
-
-        case 's':
-            keys.s.pressed = true;
-        break
-
-        case 'w':
-            keys.w.pressed = true;
-        break
-    }
-    console.log(player)
-    const playerSides = {
-        left: player.position.x - player.radius,
-        right: player.position.x + player.radius,
-        top: player.position.y - player.radius,
-        bottom: player.position.y + player.radius,
-    }
-    console.log(playerSides);
-    console.log(canvas.height);
-    console.log(canvas.width);
-
-    if (playerSides.left < 0) {
-        player.position.x = player.radius;
-    }
-    if (playerSides.right > canvas.width){
-        player.position.x = canvas.width - player.radius;
-    }
-    if (playerSides.top < 0) {
-        player.position.y = player.radius;
-    }
-    if (playerSides.bottom > canvas.height) {
-        player.position.y = canvas.height - player.radius;
-    }
-})
-window.addEventListener('keyup', (event) => {
-    switch(event.key) {
-        case 'd':
-           keys.d.pressed = false;
-        break
-        case 'a':
-            keys.a.pressed = false;
-        break
-
-        case 's':
-            keys.s.pressed = false;
-        break
-
-        case 'w':
-            keys.w.pressed = false;
-        break
-    }
-
-})
 
 startGameBtn.addEventListener('click', () => {
     init();
     animate();
     modalEl.style.display = 'none';
 })
-
-

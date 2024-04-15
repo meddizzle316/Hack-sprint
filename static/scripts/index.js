@@ -4,6 +4,8 @@
 
 let xprediction;
 let yprediction
+let particles = [];
+
 
 webgazer.setGazeListener(function(data, elapsedTime) {
 	if (data == null) {
@@ -151,14 +153,14 @@ function init() {
 function animate() {
     animationId = requestAnimationFrame(animate);
     // every frame, fills canvas with black background
-    c.fillStyle = 'rgba(0, 0, 0, 0.1';
+    c.fillStyle = 'rgba(0, 0, 0, 0.1)';
     c.fillRect(0, 0, canvas.width, canvas.height)
 
     // every frame, update draws player using draw function and updates position based on velocity and speed
     player.update();
 	// animate and draw particles
-	animateParticles(particles);
-    drawParticles(particles);
+	animateParticles();
+    drawParticles();
 
     console.log(xprediction);
     console.log(yprediction);
@@ -169,7 +171,6 @@ function animate() {
         cancelAnimationFrame(animationId);
         modalEl.style.display = 'flex';
     }
-        
 }
  
 function generateParticles(x, y) {
@@ -192,6 +193,7 @@ function generateParticles(x, y) {
 // Generate particles 4x/s
 setInterval(function() {
     var particles = generateParticles(player.position.x, player.position.y);
+	particles = particles.concat(newParticles);
     // must integrate the animation and drawing of these particles into game loop
 }, 250); // 250ms = 4x/s
 
@@ -210,7 +212,7 @@ function animateParticles(particles) {
     }
 }
 
-function drawParticles(particles) {
+function drawParticles() {
     for (var i = 0; i < particles.length; i++) {
         var particle = particles[i];
         c.beginPath();

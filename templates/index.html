@@ -58,18 +58,20 @@
         </canvas>
     </div>
     <canvas id="plotting_canvas"></canvas>
-    <!-- referencing index.js and blink_detect.js -->
-    <script defer src="{{ url_for('static', filename='scripts/index.js') }}"></script>
+
     <!-- TODO uncomment out below line when ready to implement blink_detect script -->
     <!-- <script src="{{ url_for('static', filename='blink_detect.js')}}"></script> -->
 
    
     <!-- installing webgazer.js script -->
-    <script defer src="{{ url_for('static', filename='scripts/webgazer.js') }}"></script>
+    <script defer src="/static/scripts/webgazer.js"></script>
+
+    <!-- referencing index.js and blink_detect.js -->
+    <script defer src="/static/scripts/index.js"></script>
 
     <!-- installing script to initialize webgazer object -->
-    <!-- <script defer src="{{ url_for('static', filename='scripts/eye_tracking.js') }}"></script> -->
+    <!-- <script defer src="/static/scripts/eye_tracking.js"></script> -->
     
-    <script defer src="{{ url_for('static', filename='scripts/main.js')}}"></script>
+    <!-- <script defer src="/static/scripts/main.js"></script> -->
 </body>
 </html>

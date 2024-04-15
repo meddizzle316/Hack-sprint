@@ -1,13 +1,28 @@
 #!/usr/bin/node
 
-// import * as webgazer from './webgazer.just'
-const canvas = document.querySelector('canvas');
+// import * as webgazer from './webgazer.js'
+
+let xprediction;
+let yprediction
+
+webgazer.setGazeListener(function(data, elapsedTime) {
+	if (data == null) {
+		return;
+	}
+	xprediction = data.x;
+	// console.log(xprediction) //these x coordinates are relative to the viewport
+	yprediction = data.y;
+	// console.log(yprediction) //these y coordinates are relative to the viewport
+	// console.log(elapsedTime); //elapsed time is based on time since begin was called
+}).begin();
+
+const canvas = document.querySelector('#game-background');
 const c = canvas.getContext('2d');
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-
+webgazer
 const startGameBtn = document.querySelector('#startGameBtn')
 const modalEl = document.querySelector('#modalEl')
 
@@ -17,7 +32,7 @@ const middleY = canvas.height / 2;
 function getRandomNum(min, max){
     return Math.random() * (max - min) + min;
 }
-
+let count = 0;
 
 class Player {
     constructor (radius, color, speed) {
@@ -42,6 +57,8 @@ class Player {
             x: getRandomNum(1, 10),
             y: getRandomNum(1, 10),
         }
+
+        this.health = 3;
     }
 
     draw() {
@@ -61,7 +78,8 @@ class Player {
         this.draw();
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
-
+        console.log(count);
+       
 
         // boundary handling ?? perhaps video will show something better
         const playerSides = {
@@ -77,16 +95,56 @@ class Player {
         if (playerSides.bottom >= canvas.height || playerSides.top <= 0) {
             this.velocity.y = -this.velocity.y;
         }
+
+        let xIsCenter = false;
+        let yIsCenter = false;
+
+        const colors = {
+            // white
+            3: "rgb(255, 255, 255)", 
+            // light gray
+            2: "rgb(128, 128, 128)",
+            // dark gray
+            1: "rgb(105,105,105)",
+            // black
+            0: "rgb(0, 0, 0)"
+        }
+
+        if (playerSides.right > xprediction && playerSides.left < xprediction) {
+            console.log("xprediction is between the player")
+            xIsCenter = true;
+        }
+        if (playerSides.bottom > yprediction && playerSides.top < yprediction) {
+            console.log("yprediction is between the player")
+            yIsCenter = true;
+        }
+        if (yIsCenter === false && xIsCenter === false) {
+            // this.color = "rgb(192, 192,192)";
+            console.log(count);
+            if (count <= 100) count++;
+            else {
+                count = 0;
+                console.log(this.health)
+                if (this.health > 0) this.health -= 1;
+                if (this.health === 0) {
+                    // end game and show restart div
+                    cancelAnimationFrame(animationId);
+                    modalEl.style.display = 'flex';
+                }
+                this.color = colors[this.health];
+                console.log(this.color);
+                // this.color = "rgb(112, 128, 144)";
+            } 
+            
+        }
     }
 
 }
 
-
-let player = new Player(30, 'white', 1);
-// player.draw()
+let player = new Player(60, 'white', 1);
 
 function init() {
-    player = new Player(30, 'white', 1);
+    player = new Player(60, 'white', 1);
 }
 
 
@@ -98,7 +156,8 @@ function animate() {
 
     // every frame, update draws player using draw function and updates position based on velocity and speed
     player.update();
-
+    console.log(xprediction);
+    console.log(yprediction);
     // TODO: condition for ending game, likely a timer or the "death" of the world
     // ending the game
     let placeHolder = 1; // just a placeholder to make sure we don't end yet

@@ -47,7 +47,7 @@ class Player {
 
         // the color
         this.color = color;
-        
+
         // if r*2, gives us both height and width of object from this.position location 
         this.radius = radius;
 
@@ -56,10 +56,9 @@ class Player {
 
         // used to move the object, changing x moves horizontally, y vertically
         this.velocity = {
-            x: getRandomNum(1, 10),
-            y: getRandomNum(1, 10),
+            x: getRandomNum(1, 4),
+            y: getRandomNum(1, 4),
         }
-
         this.health = 3;
     }
 
@@ -70,7 +69,6 @@ class Player {
         c.beginPath();
         c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2, false);
         c.fillStyle = this.color;
-        
         c.fill();
         c.restore();
     }
@@ -141,12 +139,11 @@ class Player {
     }
 }
 
-let player = new Player(60, 'white', 1);
+let player = new Player(100, 'white', 1);
 
 function init() {
-    player = new Player(60, 'white', 1);
+    player = new Player(100, 'white', 1);
 }
-
 
 function animate() {
     animationId = requestAnimationFrame(animate);
@@ -154,11 +151,12 @@ function animate() {
     c.fillStyle = 'rgba(0, 0, 0, 0.1)';
     c.fillRect(0, 0, canvas.width, canvas.height)
 
-    // every frame, update draws player using draw function and updates position based on velocity and speed
-    player.update();
-	// animate and draw particles
+	// animate and draw particles before player, so they appear to be underneath it
 	animateParticles();
     drawParticles();
+
+    // every frame, update draws player using draw function and updates position based on velocity and speed
+    player.update();
 
     console.log(xprediction);
     console.log(yprediction);
@@ -178,8 +176,8 @@ function generateParticles(x, y) {
             x: x + Math.random() * 30 - 15,
             y: y + Math.random() * 30 - 15,
             size: Math.random() * 5 + 1,
-            speedX: Math.random() * 3 - 1.5,
-            speedY: Math.random() * 3 - 1.5,
+            speedX: Math.random() * 5 - 1.5,
+            speedY: Math.random() * 5 - 1.5,
             opacity: 1,
             life: 0
         };
@@ -192,7 +190,7 @@ function generateParticles(x, y) {
 setInterval(function() {
     var newParticles = generateParticles(player.position.x, player.position.y);
     particles = particles.concat(newParticles);
-}, 250); // 250ms = 4x/s
+}, 200); // 250ms = 4x/s
 
 function animateParticles() {
     for (var i = 0; i < particles.length; i++) {

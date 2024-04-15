@@ -192,7 +192,7 @@ function generateParticles(x, y) {
 
 // Generate particles 4x/s
 setInterval(function() {
-    var particles = generateParticles(player.position.x, player.position.y);
+    var newParticles = generateParticles(player.position.x, player.position.y);
 	particles = particles.concat(newParticles);
     // must integrate the animation and drawing of these particles into game loop
 }, 250); // 250ms = 4x/s

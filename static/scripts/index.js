@@ -136,11 +136,9 @@ class Player {
                 this.color = colors[this.health];
                 console.log(this.color);
                 // this.color = "rgb(112, 128, 144)";
-            } 
-            
+            }
         }
     }
-
 }
 
 let player = new Player(60, 'white', 1);
@@ -172,13 +170,13 @@ function animate() {
         modalEl.style.display = 'flex';
     }
 }
- 
+
 function generateParticles(x, y) {
     var particles = [];
     for (var i = 0; i < 10; i++) {
         var particle = {
-            x: x,
-            y: y,
+            x: x + Math.random() * 30 - 15,
+            y: y + Math.random() * 30 - 15,
             size: Math.random() * 5 + 1,
             speedX: Math.random() * 3 - 1.5,
             speedY: Math.random() * 3 - 1.5,
@@ -193,11 +191,10 @@ function generateParticles(x, y) {
 // Generate particles 4x/s
 setInterval(function() {
     var newParticles = generateParticles(player.position.x, player.position.y);
-	particles = particles.concat(newParticles);
-    // must integrate the animation and drawing of these particles into game loop
+    particles = particles.concat(newParticles);
 }, 250); // 250ms = 4x/s
 
-function animateParticles(particles) {
+function animateParticles() {
     for (var i = 0; i < particles.length; i++) {
         var particle = particles[i];
         particle.x += particle.speedX;
@@ -221,6 +218,9 @@ function drawParticles() {
         c.fill();
     }
 }
+
+// Start the game loop
+animate();
 
 
 startGameBtn.addEventListener('click', () => {

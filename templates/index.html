@@ -12,8 +12,11 @@
     <!-- installing handsfree for blink_detect.js -->
     <link rel="stylesheet" href="https://unpkg.com/handsfree@8.5.1/build/lib/assets/handsfree.css" />
     <script defer src="https://unpkg.com/handsfree@8.5.1/build/lib/handsfree.js"></script>
-    
-    
+
+	<!-- installing JQuery for DOM manip-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+
     <style>
        body {
             margin: 0;
@@ -54,9 +57,10 @@
     </div>
     <div class="canvas-container">
         <canvas id="game-background">
-        
+
         </canvas>
     </div>
+
     <canvas id="plotting_canvas"></canvas>
 
     <!-- TODO uncomment out below line when ready to implement blink_detect script -->

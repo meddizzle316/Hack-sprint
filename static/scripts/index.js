@@ -156,6 +156,10 @@ function animate() {
 
     // every frame, update draws player using draw function and updates position based on velocity and speed
     player.update();
+	// animate and draw particles
+	animateParticles(particles);
+    drawParticles(particles);
+
     console.log(xprediction);
     console.log(yprediction);
     // TODO: condition for ending game, likely a timer or the "death" of the world
@@ -166,6 +170,54 @@ function animate() {
         modalEl.style.display = 'flex';
     }
         
+}
+ 
+function generateParticles(x, y) {
+    var particles = [];
+    for (var i = 0; i < 10; i++) {
+        var particle = {
+            x: x,
+            y: y,
+            size: Math.random() * 5 + 1,
+            speedX: Math.random() * 3 - 1.5,
+            speedY: Math.random() * 3 - 1.5,
+            opacity: 1,
+            life: 0
+        };
+        particles.push(particle);
+    }
+    return particles;
+}
+
+// Generate particles 4x/s
+setInterval(function() {
+    var particles = generateParticles(player.position.x, player.position.y);
+    // must integrate the animation and drawing of these particles into game loop
+}, 250); // 250ms = 4x/s
+
+function animateParticles(particles) {
+    for (var i = 0; i < particles.length; i++) {
+        var particle = particles[i];
+        particle.x += particle.speedX;
+        particle.y += particle.speedY;
+        particle.opacity -= 0.01;
+        particle.life++;
+
+        if (particle.opacity < 0) {
+            particles.splice(i, 1);
+            i--;
+        }
+    }
+}
+
+function drawParticles(particles) {
+    for (var i = 0; i < particles.length; i++) {
+        var particle = particles[i];
+        c.beginPath();
+        c.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2, false);
+        c.fillStyle = 'rgba(' + Math.random() * 255 + ',' + Math.random() * 255 + ',' + Math.random() * 255 + ', ' + particle.opacity + ')';
+        c.fill();
+    }
 }
 
 

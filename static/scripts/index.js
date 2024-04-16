@@ -101,13 +101,13 @@ class Player {
 
         const colors = {
             // white
-            3: "rgb(255, 255, 255)", 
+            3: "rgba(255, 255, 255, 1)", 
             // light gray
-            2: "rgb(128, 128, 128)",
+            2: "rgba(128, 128, 128, .666)",
             // dark gray
-            1: "rgb(105,105,105)",
+            1: "rgba(105, 105, 105, .333)",
             // black
-            0: "rgb(0, 0, 0)"
+            0: "rgb(0, 0, 0, 0)"
         }
 
         if (playerSides.right > xprediction && playerSides.left < xprediction) {
@@ -191,10 +191,13 @@ function generateParticles(x, y, radius) {
 }
 
 // Generate particles
+
 setInterval(function() {
-    var newParticles = generateParticles(player.position.x, player.position.y, player.radius - 10);
-    particles = particles.concat(newParticles);
-}, 400); // 400ms = 2.xx/s
+	if (player.health > 0) {
+		var newParticles = generateParticles(player.position.x, player.position.y, player.radius - 10);
+		particles = particles.concat(newParticles);
+	}
+}, 400); // 400ms = 2.5x/s
 
 function animateParticles() {
     for (var i = 0; i < particles.length; i++) {

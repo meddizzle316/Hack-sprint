@@ -24,7 +24,6 @@ const c = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-webgazer
 const startGameBtn = document.querySelector('#startGameBtn')
 const modalEl = document.querySelector('#modalEl')
 
@@ -102,12 +101,12 @@ class Player {
         const colors = {
             // white
             3: "rgba(255, 255, 255, 1)", 
-            // light gray
-            2: "rgba(128, 128, 128, .666)",
-            // dark gray
-            1: "rgba(105, 105, 105, .333)",
+            // faded white
+            2: "rgba(200, 200, 200, .9)",
+            // more faded white
+            1: "rgba(145, 145, 145, .8)",
             // black
-            0: "rgb(0, 0, 0, 0)"
+            0: "rgba(0, 0, 0, 0)"
         }
 
         if (playerSides.right > xprediction && playerSides.left < xprediction) {
@@ -191,7 +190,6 @@ function generateParticles(x, y, radius) {
 }
 
 // Generate particles
-
 setInterval(function() {
 	if (player.health > 0) {
 		var newParticles = generateParticles(player.position.x, player.position.y, player.radius - 10);
@@ -226,7 +224,6 @@ function drawParticles() {
 
 // Start the game loop
 animate();
-
 
 startGameBtn.addEventListener('click', () => {
     init();

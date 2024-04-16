@@ -16,6 +16,7 @@ webgazer.setGazeListener(function(data, elapsedTime) {
 	// console.log(elapsedTime); //elapsed time is based on time since begin was called
 }).begin();
 
+
 const canvas = document.querySelector('#game-background');
 const c = canvas.getContext('2d');
 
@@ -33,6 +34,15 @@ function getRandomNum(min, max){
     return Math.random() * (max - min) + min;
 }
 let count = 0;
+let step = 10;
+let deg = +(Math.random() * 360).toFixed();
+
+function getShift(deg, step) {
+    return {
+        x: +(Math.cos(deg * Math.PI / 180) * step).toFixed(),
+        y: +(Math.sin(deg * Math.PI / 180) * step).toFixed(),
+    };
+}
 
 class Player {
     constructor (radius, color, speed) {
@@ -59,6 +69,7 @@ class Player {
         }
 
         this.health = 3;
+        this.distance = 10;
     }
 
     draw() {
@@ -76,8 +87,8 @@ class Player {
     update() {
     //
         this.draw();
-        this.position.x += this.velocity.x;
-        this.position.y += this.velocity.y;
+        // this.position.x += this.velocity.x;
+        // this.position.y += this.velocity.y;
         console.log(count);
        
 
@@ -89,11 +100,25 @@ class Player {
             bottom: player.position.y + player.radius,
         }
 
-        if (playerSides.right >= canvas.width || playerSides.left <= 0) {
-            this.velocity.x = -this.velocity.x;
+        // if (playerSides.right >= canvas.width || playerSides.left <= 0) {
+        //     // this.velocity.x = -this.velocity.x;
+        // }
+        // if (playerSides.bottom >= canvas.height || playerSides.top <= 0) {
+        //     this.velocity.y = -this.velocity.y;
+        // }
+
+        // defining boundary collision
+        if (playerSides.right >= canvas.width) {
+            player.position.x = player.radius;
         }
-        if (playerSides.bottom >= canvas.height || playerSides.top <= 0) {
-            this.velocity.y = -this.velocity.y;
+        if (playerSides.left <= 0) {
+            player.position.x = canvas.width - player.radius;
+        }
+        if (playerSides.top <= 0) {
+            player.position.y = canvas.height - player.radius;
+        }
+        if (playerSides.bottom >= canvas.height) {
+            player.position.y = player.radius;
         }
 
         let xIsCenter = false;
@@ -136,6 +161,16 @@ class Player {
                 // this.color = "rgb(112, 128, 144)";
             } 
             
+          deg += +(Math.random() * 55 * 2 - 55).toFixed();
+          let shift = getShift(deg, step);
+          while (Math.abs(3 + shift.x) >= player.distance || Math.abs(3 + shift.y) >= player.distance) {
+            deg += +(Math.random() * 55 * 2 - 55).toFixed();
+            shift = getShift(deg, step);  
+          }
+
+          player.position.x += shift.x;
+          player.position.y += shift.y;
+
         }
     }
 

@@ -102,9 +102,9 @@ class Player {
             // white
             3: "rgba(255, 255, 255, 1)", 
             // faded white
-            2: "rgba(200, 200, 200, .9)",
+            2: "rgba(210, 210, 210, .9)",
             // more faded white
-            1: "rgba(145, 145, 145, .8)",
+            1: "rgba(165, 165, 165, .8)",
             // black
             0: "rgba(0, 0, 0, 0)"
         }
@@ -118,7 +118,7 @@ class Player {
             yIsCenter = true;
         }
         if (yIsCenter === false && xIsCenter === false) {
-            // this.color = "rgb(192, 192,192)";
+            // this.color = "rgb(192, 192, 192)";
             console.log(count);
             if (count <= 100) count++;
             else {

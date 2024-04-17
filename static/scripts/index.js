@@ -21,7 +21,6 @@ const c = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-webgazer
 const startGameBtn = document.querySelector('#startGameBtn')
 const modalEl = document.querySelector('#modalEl')
 
@@ -66,7 +65,7 @@ class Player {
 
         // the color
         this.color = color;
-        
+
         // if r*2, gives us both height and width of object from this.position location 
         this.radius = radius;
 
@@ -78,7 +77,6 @@ class Player {
             x: getRandomNum(1, 5),
             y: getRandomNum(1, 5),
         }
-
         this.health = 3;
         this.distance = 10;
     }
@@ -90,7 +88,6 @@ class Player {
         c.beginPath();
         c.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2, false);
         c.fillStyle = this.color;
-        
         c.fill();
         c.restore();
     }
@@ -209,7 +206,7 @@ setInterval(function() {
 		var newParticles = generateParticles(player.position.x, player.position.y, player.radius - 10);
 		particles = particles.concat(newParticles);
 	}
-}, 333); // 333ms = 3x/s
+}, 333); // 333ms = 3 calls / sec
 
 function animateParticles() {
     for (var i = 0; i < particles.length; i++) {

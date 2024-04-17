@@ -24,7 +24,6 @@ const c = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-webgazer
 const startGameBtn = document.querySelector('#startGameBtn')
 const modalEl = document.querySelector('#modalEl')
 
@@ -101,13 +100,13 @@ class Player {
 
         const colors = {
             // white
-            3: "rgb(255, 255, 255)", 
-            // light gray
-            2: "rgb(128, 128, 128)",
-            // dark gray
-            1: "rgb(105,105,105)",
+            3: "rgba(255, 255, 255, 1)", 
+            // faded white
+            2: "rgba(210, 210, 210, .9)",
+            // more faded white
+            1: "rgba(165, 165, 165, .8)",
             // black
-            0: "rgb(0, 0, 0)"
+            0: "rgba(0, 0, 0, 0)"
         }
 
         if (playerSides.right > xprediction && playerSides.left < xprediction) {
@@ -119,7 +118,7 @@ class Player {
             yIsCenter = true;
         }
         if (yIsCenter === false && xIsCenter === false) {
-            // this.color = "rgb(192, 192,192)";
+            // this.color = "rgb(192, 192, 192)";
             console.log(count);
             if (count <= 100) count++;
             else {
@@ -192,9 +191,11 @@ function generateParticles(x, y, radius) {
 
 // Generate particles
 setInterval(function() {
-    var newParticles = generateParticles(player.position.x, player.position.y, player.radius - 10);
-    particles = particles.concat(newParticles);
-}, 400); // 400ms = 2.xx/s
+	if (player.health > 0) {
+		var newParticles = generateParticles(player.position.x, player.position.y, player.radius - 10);
+		particles = particles.concat(newParticles);
+	}
+}, 400); // 400ms = 2.5x/s
 
 function animateParticles() {
     for (var i = 0; i < particles.length; i++) {
@@ -223,7 +224,6 @@ function drawParticles() {
 
 // Start the game loop
 animate();
-
 
 startGameBtn.addEventListener('click', () => {
     init();

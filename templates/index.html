@@ -4,7 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Focalmancy</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/letter-f-white-16x16.png">
+    <link rel="icon" type="image/png" sizes="24x24" href="/images/letter-f-white-24x24.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/letter-f-white-32x32.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="/images/letter-f-white-64.png">
+    <link rel="icon" type="image/png" sizes="128x128" href="/images/letter-f-white-128.png">
+    <link rel="icon" type="image/png" sizes="256x256" href="/images/letter-f-white-256.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/images/letter-f-white-512x512.png">
 
     <!-- installing tailwind for css classes -->
     <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
@@ -15,7 +22,7 @@
 
 
     <style>
-       body {
+        body {
             margin: 0;
             background: black;
         }
@@ -27,7 +34,7 @@
             z-index: 999;
         }
         #modalEl {
-            position:relative;
+            position: absolute;
         }
         #restartScreen {
             position: absolute;
@@ -43,13 +50,14 @@
         handsfree.start()
       </script> -->
     <div class="fixed inset-0 flex items-center justify-center" id="modalEl">
-        <div class="bg-white max-w-md w-full p-6 text-center" id="restartScreen">
-            <h1 class="text-4xl font-bold leading-none">0</h1>
+        <div class="opacity-100 p-6 flex text-center justify-center" id="restartScreen">
+<!-- points system in the works - - -
+	        <h1 class="text-4xl font-bold leading-none">0</h1>
             <p class="text-sm text-gray-700 mb-4">Points</p>
-            <div>
-                <button class="bg-blue-500 text-white w-full py-3 rounded-full text-sm" id="startGameBtn">Start Game</button>
+- - - points system in the works -->
+			<div class ="flex items-center justify-center">
+				<button class="bg-white opacity-1 text-black py-2 rounded-full text-lg font-mono font-bold w-48 h-48" id="startGameBtn">Observe</button>
             </div>
-            
         </div>
     </div>
     <div class="canvas-container">

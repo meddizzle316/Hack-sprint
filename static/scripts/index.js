@@ -206,7 +206,7 @@ setInterval(function() {
 		var newParticles = generateParticles(player.position.x, player.position.y, player.radius - 10);
 		particles = particles.concat(newParticles);
 	}
-}, 333); // 333ms = 3x/s
+}, 333); // 333ms = 3 calls / sec
 
 function animateParticles() {
     for (var i = 0; i < particles.length; i++) {

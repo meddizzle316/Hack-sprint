@@ -27,9 +27,10 @@ const modalEl = document.querySelector('#modalEl')
 const middleX = canvas.width / 2;
 const middleY = canvas.height / 2;
 
-function getRandomNum(min, max){
+function getRandomNum(min, max) {
     return Math.random() * (max - min) + min;
 }
+
 let count = 0;
 let step = 5;
 let deg = +(Math.random() * 360).toFixed();
@@ -40,17 +41,17 @@ function getShift(deg, step) {
         y: +(Math.sin(deg * Math.PI / 270) * step).toFixed(),
     };
 }
+
 const colors = {
     // white
     3: "rgba(255, 255, 255, 1)", 
-    // faded white
-    2: "rgba(200, 200, 200, .9)",
-    // more faded white
-    1: "rgba(145, 145, 145, .8)",
+    // faded
+    2: "rgba(210, 210, 210, .9)",
+    // more faded
+    1: "rgba(165, 165, 165, .8)",
     // black
     0: "rgba(0, 0, 0, 0)"
 }
-
 
 
 class Player {
@@ -121,7 +122,6 @@ class Player {
         let xIsCenter = false;
         let yIsCenter = false;
 
-
         if (playerSides.right > xprediction && playerSides.left < xprediction) {
             xIsCenter = true;
             if (playerSides.bottom > yprediction && playerSides.top < yprediction) {
@@ -131,7 +131,7 @@ class Player {
             }
         }
         if (yIsCenter === false && xIsCenter === false) {
-            // this.color = "rgb(192, 192,192)";
+            // this.color = "rgb(192, 192, 192)";
             console.log(deltaTime)
             if (count <= 3000) count += deltaTime;
             else {
@@ -144,7 +144,7 @@ class Player {
                 }
                 this.color = colors[this.health];
                 // this.color = "rgb(112, 128, 144)";
-            } 
+            }
         deg += +(Math.random() * 55 * 2 - 55).toFixed();
         let shift = getShift(deg, step);
         while (Math.abs(3 + shift.x) >= player.distance || Math.abs(3 + shift.y) >= player.distance) {
@@ -154,9 +154,7 @@ class Player {
         player.position.x += shift.x;
         player.position.y += shift.y;    
         }
-
     }
-
 }
 
 let player = new Player(100, 'white', 1);
@@ -180,6 +178,7 @@ function animate() {
     lastFrameTime = now;
     animationId = requestAnimationFrame(animate);     
 }
+
 function generateParticles(x, y, radius) {
     var particles = [];
     var numParticles = Math.random() + 0.5 * 25;
@@ -202,13 +201,12 @@ function generateParticles(x, y, radius) {
 }
 
 // Generate particles
-
 setInterval(function() {
 	if (player.health > 0) {
 		var newParticles = generateParticles(player.position.x, player.position.y, player.radius - 10);
 		particles = particles.concat(newParticles);
 	}
-}, 400); // 400ms = 2.5x/s
+}, 333); // 333ms = 3x/s
 
 function animateParticles() {
     for (var i = 0; i < particles.length; i++) {

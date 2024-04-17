@@ -1,1 +1,0 @@
-Hack Sprint project README

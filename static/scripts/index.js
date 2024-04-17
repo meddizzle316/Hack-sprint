@@ -46,10 +46,10 @@ function getShift(deg, step) {
 const colors = {
     // white
     3: "rgba(255, 255, 255, 1)", 
-    // faded white
-    2: "rgba(200, 200, 200, .9)",
-    // more faded white
-    1: "rgba(145, 145, 145, .8)",
+    // faded
+    2: "rgba(210, 210, 210, .9)",
+    // more faded
+    1: "rgba(165, 165, 165, .8)",
     // black
     0: "rgba(0, 0, 0, 0)"
 }
@@ -134,7 +134,7 @@ class Player {
             }
         }
         if (yIsCenter === false && xIsCenter === false) {
-            // this.color = "rgb(192, 192,192)";
+            // this.color = "rgb(192, 192, 192)";
             console.log(deltaTime)
             if (count <= 3000) count += deltaTime;
             else {

@@ -1,4 +1,3 @@
-
 // webgazer.setGazeListener(function(data, elapsedTime) {
 // 	if (data == null) {
 // 		return;
@@ -9,4 +8,3 @@
 // 	console.log(yprediction) //these y coordinates are relative to the viewport
 // 	console.log(elapsedTime); //elapsed time is based on time since begin was called
 // }).begin();
-		

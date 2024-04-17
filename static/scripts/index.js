@@ -6,17 +6,14 @@ let xprediction;
 let yprediction
 let particles = [];
 
-
 webgazer.setGazeListener(function(data, elapsedTime) {
 	if (data == null) {
 		return;
 	}
 	xprediction = data.x;
-	// console.log(xprediction) //these x coordinates are relative to the viewport
 	yprediction = data.y;
-	// console.log(yprediction) //these y coordinates are relative to the viewport
-	// console.log(elapsedTime); //elapsed time is based on time since begin was called
 }).begin();
+
 
 const canvas = document.querySelector('#game-background');
 const c = canvas.getContext('2d');
@@ -34,6 +31,27 @@ function getRandomNum(min, max){
     return Math.random() * (max - min) + min;
 }
 let count = 0;
+let step = 5;
+let deg = +(Math.random() * 360).toFixed();
+
+function getShift(deg, step) {
+    return {
+        x: +(Math.cos(deg * Math.PI / 270) * step).toFixed(),
+        y: +(Math.sin(deg * Math.PI / 270) * step).toFixed(),
+    };
+}
+const colors = {
+    // white
+    3: "rgba(255, 255, 255, 1)", 
+    // faded white
+    2: "rgba(200, 200, 200, .9)",
+    // more faded white
+    1: "rgba(145, 145, 145, .8)",
+    // black
+    0: "rgba(0, 0, 0, 0)"
+}
+
+
 
 class Player {
     constructor (radius, color, speed) {
@@ -55,10 +73,11 @@ class Player {
 
         // used to move the object, changing x moves horizontally, y vertically
         this.velocity = {
-            x: getRandomNum(1, 3),
-            y: getRandomNum(1, 3),
+            x: getRandomNum(1, 5),
+            y: getRandomNum(1, 5),
         }
         this.health = 3;
+        this.distance = 10;
     }
 
     draw() {
@@ -72,15 +91,13 @@ class Player {
         c.restore();
     }
 
-    update() {
-    //
+    update(deltaTime) {
         this.draw();
+        // this.position.x += this.velocity.x * (deltaTime / 100);
+        // this.position.y += this.velocity.y * (deltaTime / 100);
         this.position.x += this.velocity.x;
         this.position.y += this.velocity.y;
-        console.log(count);
-       
 
-        // boundary handling
         const playerSides = {
             left: player.position.x - player.radius,
             right: player.position.x + player.radius,
@@ -88,42 +105,37 @@ class Player {
             bottom: player.position.y + player.radius,
         }
 
-        if (playerSides.right >= canvas.width || playerSides.left <= 0) {
-            this.velocity.x = -this.velocity.x;
+        if (playerSides.right >= canvas.width) {
+            player.position.x = player.radius;
         }
-        if (playerSides.bottom >= canvas.height || playerSides.top <= 0) {
-            this.velocity.y = -this.velocity.y;
+        else if (playerSides.left <= 0) {
+            player.position.x = canvas.width - player.radius;
+        }
+        else if (playerSides.top <= 0) {
+            player.position.y = canvas.height - player.radius;
+        }
+        else if (playerSides.bottom >= canvas.height) {
+            player.position.y = player.radius;
         }
 
         let xIsCenter = false;
         let yIsCenter = false;
 
-        const colors = {
-            // white
-            3: "rgba(255, 255, 255, 1)", 
-            // faded white
-            2: "rgba(210, 210, 210, .9)",
-            // more faded white
-            1: "rgba(165, 165, 165, .8)",
-            // black
-            0: "rgba(0, 0, 0, 0)"
-        }
 
         if (playerSides.right > xprediction && playerSides.left < xprediction) {
-            console.log("xprediction is between the player")
             xIsCenter = true;
-        }
-        if (playerSides.bottom > yprediction && playerSides.top < yprediction) {
-            console.log("yprediction is between the player")
-            yIsCenter = true;
+            if (playerSides.bottom > yprediction && playerSides.top < yprediction) {
+                yIsCenter = true;
+                if (this.health < 3) this.health += 1;
+                this.color = colors[this.health];
+            }
         }
         if (yIsCenter === false && xIsCenter === false) {
-            // this.color = "rgb(192, 192, 192)";
-            console.log(count);
-            if (count <= 100) count++;
+            // this.color = "rgb(192, 192,192)";
+            console.log(deltaTime)
+            if (count <= 3000) count += deltaTime;
             else {
                 count = 0;
-                console.log(this.health)
                 if (this.health > 0) this.health -= 1;
                 if (this.health === 0) {
                     // end game and show restart div
@@ -131,11 +143,20 @@ class Player {
                     modalEl.style.display = 'flex';
                 }
                 this.color = colors[this.health];
-                console.log(this.color);
                 // this.color = "rgb(112, 128, 144)";
-            }
+            } 
+        deg += +(Math.random() * 55 * 2 - 55).toFixed();
+        let shift = getShift(deg, step);
+        while (Math.abs(3 + shift.x) >= player.distance || Math.abs(3 + shift.y) >= player.distance) {
+            deg += +(Math.random() * 55 * 2 - 55).toFixed();
+            shift = getShift(deg, step);  
         }
+        player.position.x += shift.x;
+        player.position.y += shift.y;    
+        }
+
     }
+
 }
 
 let player = new Player(100, 'white', 1);
@@ -144,30 +165,21 @@ function init() {
     player = new Player(100, 'white', 1);
 }
 
+let lastFrameTime = Date.now()
 function animate() {
-    animationId = requestAnimationFrame(animate);
+    const now = Date.now();
+    const deltaTime = now - lastFrameTime;
     // every frame, fills canvas with black background
     c.fillStyle = 'rgba(0, 0, 0, 0.1)';
     c.fillRect(0, 0, canvas.width, canvas.height)
 
-	// animate and draw particles before player, so they appear to be underneath it
-	animateParticles();
+    animateParticles();
     drawParticles();
-
     // every frame, update draws player using draw function and updates position based on velocity and speed
-    player.update();
-
-    console.log(xprediction);
-    console.log(yprediction);
-    // TODO: condition for ending game, likely a timer or the "death" of the world
-    // ending the game
-    let placeHolder = 1; // just a placeholder to make sure we don't end yet
-    if (placeHolder == 0)    {
-        cancelAnimationFrame(animationId);
-        modalEl.style.display = 'flex';
-    }
+    player.update(deltaTime);
+    lastFrameTime = now;
+    animationId = requestAnimationFrame(animate);     
 }
-
 function generateParticles(x, y, radius) {
     var particles = [];
     var numParticles = Math.random() + 0.5 * 25;
@@ -190,6 +202,7 @@ function generateParticles(x, y, radius) {
 }
 
 // Generate particles
+
 setInterval(function() {
 	if (player.health > 0) {
 		var newParticles = generateParticles(player.position.x, player.position.y, player.radius - 10);
@@ -222,8 +235,6 @@ function drawParticles() {
     }
 }
 
-// Start the game loop
-animate();
 
 startGameBtn.addEventListener('click', () => {
     init();
